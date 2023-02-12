@@ -1,0 +1,28 @@
+log_level: info
+workers:
+  - interval: 300
+    force: true
+    resolvers:
+      - type: web
+        config:
+          request:
+            method: GET
+            url: http://192.168.1.1/cgi-bin/broadbandstatistics.ha
+          ipv4_parser:
+            type: xpath
+            config:
+              selector: //th[contains(text(), 'Broadband IPv4 Address')]//parent::tr//td
+          ipv6_parser:
+            type: xpath
+            config:
+              selector: //th[contains(text(), 'Global Unicast IPv6 Address')]//parent::tr//td
+    updaters:
+      - type: cloudflare
+        force: true
+        update_records:
+          - type: v4
+            hostname: example.com
+          - type: v6
+            hostname: example.com
+        config:
+          api_key: YOUR_API_KEY_HERE
